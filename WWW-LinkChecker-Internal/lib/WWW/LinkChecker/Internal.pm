@@ -6,52 +6,23 @@ use warnings;
 
 =head1 NAME
 
-WWW::LinkChecker::Internal - The great new WWW::LinkChecker::Internal!
+WWW::LinkChecker::Internal - Check a web site for broken internal links.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0.1
 
 =cut
 
-our $VERSION = '0.01';
-
+our $VERSION = '0.0.1';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
-    use WWW::LinkChecker::Internal;
-
-    my $foo = WWW::LinkChecker::Internal->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
-
-=cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
+See the link-checker.pl script in this distribution.
 
 =head1 AUTHOR
 
-Shlomi Fish, C<< <shlomif at cpan.org> >>
+Shlomi Fish, L<http://www.shlomifish.org> .
 
 =head1 BUGS
 
