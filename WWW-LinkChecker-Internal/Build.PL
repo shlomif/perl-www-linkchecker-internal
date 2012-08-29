@@ -16,6 +16,10 @@ my $builder = Module::Build->new(
     },
     add_to_cleanup      => [ 'WWW-LinkChecker-Internal-*' ],
     create_makefile_pl => 'traditional',
+    script_files =>
+    [
+        'scripts/link-checker',
+    ],
 );
 
 $builder->create_build_script();
