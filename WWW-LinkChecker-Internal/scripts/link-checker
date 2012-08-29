@@ -6,6 +6,26 @@
 
 Traverses the pages and checks for inner broken links.
 
+=head1 FLAGS
+
+=over 4
+
+=item * --base '$URL'
+
+The base URL of the web site (and the start URL for the traversal.
+
+=item * --pre-skip '$REGEX'
+
+A regular expression for matching a URL so it won't be checked for outgoing
+links (but will be tried to be followed). Can be specified more than once.
+
+=item * --before-insert-skip '$REGEX'
+
+A regular expression for preventing URLs from being retrieved in the first
+place. Can be specified more than once.
+
+=back
+
 =head1 LIMITATIONS
 
 =over 4
@@ -27,12 +47,21 @@ use warnings;
 use Getopt::Long;
 use WWW::Mechanize;
 
+use List::MoreUtils qw( any none );
+
 my $base_url;
 
+my @pre_skip_texts;
+my @before_insert_skips_texts;
 GetOptions(
-    'base=s' => \$base_url
+    'base=s' => \$base_url,
+    'pre-skip=s' => \@pre_skip_texts,
+    'before-insert-skip=s' => \@before_insert_skips_texts,
 )
 or die "GetOptions failed.";
+
+my @pre_skip_regexes = map { qr/$_/ } @pre_skip_texts;
+my @before_insert_skips_regexes = map { qr/$_/ } @before_insert_skips_texts;
 
 my $start_url = $base_url;
 
@@ -42,6 +71,7 @@ push @stack, { url => $start_url, from => undef(), },;
 
 my %encountered_urls;
 
+STACK:
 while (my $url_rec = pop(@stack))
 {
     my $url = $url_rec->{'url'};
@@ -60,12 +90,18 @@ while (my $url_rec = pop(@stack))
             die "SRC URL $url_rec->{from} points to '$url'.";
         }
 
+        if (any { $url =~ $_} @pre_skip_regexes)
+        {
+            next STACK;
+        }
 
         foreach my $link ($mech->links())
         {
             my $dest_url = $link->url_abs() . "";
             $dest_url =~ s{#[^#]+\z}{}ms;
-            if ($dest_url =~ m{\A\Q$base_url\E}ms)
+            if ($dest_url =~ m{\A\Q$base_url\E}ms and
+                (none { $dest_url =~ $_ } @before_insert_skips_regexes)
+            )
             {
                 push @stack, { url => $dest_url, from => $url, };
             }

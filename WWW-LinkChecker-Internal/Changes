@@ -1,5 +1,8 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.0.3
+    * Add the --pre-skip and --before-insert-skip flags.
+
 0.0.2   Wed 29 Aug 15:01:56 IDT 2012
     * Add missing dependencies to Makefile.PL.
 
