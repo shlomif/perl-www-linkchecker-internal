@@ -71,40 +71,40 @@ push @stack, { url => $start_url, from => undef(), },;
 
 my %encountered_urls;
 
+$encountered_urls{$start_url} = 1;
+
 STACK:
 while (my $url_rec = pop(@stack))
 {
     my $url = $url_rec->{'url'};
-    if (!exists($encountered_urls{$url}))
-    {
-        print "Checking SRC URL '$url'\n";
-        $encountered_urls{$url} = 1;
+    print "Checking SRC URL '$url'\n";
 
-        my $mech = WWW::Mechanize->new();
-        eval {
+    my $mech = WWW::Mechanize->new();
+    eval {
         $mech->get( $url );
-        };
+    };
 
-        if ($@)
-        {
-            die "SRC URL $url_rec->{from} points to '$url'.";
-        }
+    if ($@)
+    {
+        die "SRC URL $url_rec->{from} points to '$url'.";
+    }
 
-        if (any { $url =~ $_} @pre_skip_regexes)
-        {
-            next STACK;
-        }
+    if (any { $url =~ $_} @pre_skip_regexes)
+    {
+        next STACK;
+    }
 
-        foreach my $link ($mech->links())
+    foreach my $link ($mech->links())
+    {
+        my $dest_url = $link->url_abs() . "";
+        $dest_url =~ s{#[^#]+\z}{}ms;
+        if ((!exists($encountered_urls{$dest_url})) and
+            $dest_url =~ m{\A\Q$base_url\E}ms and
+            (none { $dest_url =~ $_ } @before_insert_skips_regexes)
+        )
         {
-            my $dest_url = $link->url_abs() . "";
-            $dest_url =~ s{#[^#]+\z}{}ms;
-            if ($dest_url =~ m{\A\Q$base_url\E}ms and
-                (none { $dest_url =~ $_ } @before_insert_skips_regexes)
-            )
-            {
-                push @stack, { url => $dest_url, from => $url, };
-            }
+            $encountered_urls{$dest_url} = 1;
+            push @stack, { url => $dest_url, from => $url, };
         }
     }
 }
