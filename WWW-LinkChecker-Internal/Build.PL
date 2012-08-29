@@ -12,7 +12,11 @@ my $builder = Module::Build->new(
         'Test::More' => 0,
     },
     requires => {
+        'Getopt::Long' => 0,
+        'WWW::Mechanize' => 0,
         'perl' => 5.006,
+        'strict' => 0,
+        'warnings' => 0,
     },
     add_to_cleanup      => [ 'WWW-LinkChecker-Internal-*' ],
     create_makefile_pl => 'traditional',
