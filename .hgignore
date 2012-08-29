@@ -1,5 +1,6 @@
 WWW-LinkChecker-Internal/blib
 WWW-LinkChecker-Internal/Build
+WWW-LinkChecker-Internal/Makefile.PL
 WWW-LinkChecker-Internal/MYMETA.json
 WWW-LinkChecker-Internal/MYMETA.yml
 WWW-LinkChecker-Internal/META.json
