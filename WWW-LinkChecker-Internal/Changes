@@ -1,5 +1,8 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.0.2   Wed 29 Aug 15:01:56 IDT 2012
+    * Add missing dependencies to Makefile.PL.
+
 0.0.1   Wed 29 Aug 14:51:12 IDT 2012
         First version, released on an unsuspecting world.
 
