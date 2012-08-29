@@ -10,3 +10,4 @@ t/pod.t
 Makefile.PL
 META.yml
 META.json
+scripts/link-checker
