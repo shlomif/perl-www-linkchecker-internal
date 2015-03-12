@@ -1,5 +1,8 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.0.4   Unknown
+    * Add t/style-trailing-space.t .
+
 0.0.3   Thu 30 Aug 00:47:55 IDT 2012
     * Add the --pre-skip and --before-insert-skip flags.
     * A memory/speed optimisation.
