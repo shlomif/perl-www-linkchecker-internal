@@ -2,6 +2,7 @@ Revision history for WWW-LinkChecker-Internal
 
 0.0.4   Unknown
     * Add t/style-trailing-space.t .
+    * Add resources and keywords to the META.yml.
 
 0.0.3   2012-08-30
     * Add the --pre-skip and --before-insert-skip flags.
