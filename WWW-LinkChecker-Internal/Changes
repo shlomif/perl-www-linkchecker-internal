@@ -1,6 +1,6 @@
 Revision history for WWW-LinkChecker-Internal
 
-0.0.4   Unknown
+0.0.4   2015-03-12
     * Add t/style-trailing-space.t .
     * Add resources and keywords to the META.yml.
     * Made the link-checker script's error on empty @ARGV more user-friendly
