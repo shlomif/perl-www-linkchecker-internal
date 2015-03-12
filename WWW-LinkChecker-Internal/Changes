@@ -3,13 +3,13 @@ Revision history for WWW-LinkChecker-Internal
 0.0.4   Unknown
     * Add t/style-trailing-space.t .
 
-0.0.3   Thu 30 Aug 00:47:55 IDT 2012
+0.0.3   2012-08-30
     * Add the --pre-skip and --before-insert-skip flags.
     * A memory/speed optimisation.
 
-0.0.2   Wed 29 Aug 15:01:56 IDT 2012
+0.0.2   2012-08-29
     * Add missing dependencies to Makefile.PL.
 
-0.0.1   Wed 29 Aug 14:51:12 IDT 2012
+0.0.1   2012-08-29
         First version, released on an unsuspecting world.
 
