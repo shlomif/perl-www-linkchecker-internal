@@ -4,7 +4,8 @@ Revision history for WWW-LinkChecker-Internal
     * Add t/style-trailing-space.t .
     * Add resources and keywords to the META.yml.
     * Made the link-checker script's error on empty @ARGV more user-friendly
-        - See https://rt.cpan.org/Ticket/Display.html?id=102723
+        * See https://rt.cpan.org/Ticket/Display.html?id=102723
+        * Thanks to Gabor Szabo (SZABGAB) for the report and analysis.
 
 0.0.3   2012-08-30
     * Add the --pre-skip and --before-insert-skip flags.
