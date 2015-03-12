@@ -60,6 +60,11 @@ GetOptions(
 )
 or die "GetOptions failed.";
 
+if (!defined ($base_url))
+{
+    die "--base must be specified";
+}
+
 my @pre_skip_regexes = map { qr/$_/ } @pre_skip_texts;
 my @before_insert_skips_regexes = map { qr/$_/ } @before_insert_skips_texts;
 
