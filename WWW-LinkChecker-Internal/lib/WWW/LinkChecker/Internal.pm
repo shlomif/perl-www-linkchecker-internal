@@ -10,11 +10,11 @@ WWW::LinkChecker::Internal - Check a web site for broken internal links.
 
 =head1 VERSION
 
-Version 0.0.4
+Version 0.2.0
 
 =cut
 
-our $VERSION = '0.0.4';
+our $VERSION = '0.2.0';
 
 =head1 SYNOPSIS
 
