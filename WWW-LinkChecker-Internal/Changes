@@ -1,5 +1,12 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.2.0   2015-03-22
+    * Add the --start option for an alternative start URL.
+    * Print an output on successful finish.
+    * Both changes were done to address this bug:
+        * See https://rt.cpan.org/Public/Bug/Display.html?id=102724
+        * Thanks to Gabor Szabo (SZABGAB) for the report and analysis.
+
 0.0.4   2015-03-12
     * Add t/style-trailing-space.t .
     * Add resources and keywords to the META.yml.

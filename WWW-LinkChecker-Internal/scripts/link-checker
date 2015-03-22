@@ -24,6 +24,10 @@ links (but will be tried to be followed). Can be specified more than once.
 A regular expression for preventing URLs from being retrieved in the first
 place. Can be specified more than once.
 
+=item * --start '$URL'
+
+An alternative start URL (instead of the base URL) to start the scan from.
+
 =back
 
 =head1 LIMITATIONS
@@ -50,6 +54,7 @@ use WWW::Mechanize;
 use List::MoreUtils qw( any none );
 
 my $base_url;
+my $alternative_start_url;
 
 my @pre_skip_texts;
 my @before_insert_skips_texts;
@@ -57,6 +62,7 @@ GetOptions(
     'base=s' => \$base_url,
     'pre-skip=s' => \@pre_skip_texts,
     'before-insert-skip=s' => \@before_insert_skips_texts,
+    'start=s' => \$alternative_start_url,
 )
 or die "GetOptions failed.";
 
@@ -68,7 +74,7 @@ if (!defined ($base_url))
 my @pre_skip_regexes = map { qr/$_/ } @pre_skip_texts;
 my @before_insert_skips_regexes = map { qr/$_/ } @before_insert_skips_texts;
 
-my $start_url = $base_url;
+my $start_url = ($alternative_start_url || $base_url);
 
 my @stack;
 
@@ -113,6 +119,8 @@ while (my $url_rec = pop(@stack))
         }
     }
 }
+
+print "Finished checking the site under the base URL '$base_url'.\nNo broken links were found\n";
 
 =head1 COPYRIGHT & LICENSE
 
