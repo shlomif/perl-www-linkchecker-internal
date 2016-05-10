@@ -1,5 +1,8 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.4.0   2016-05-11
+    * Add the --state-filename flag for preserving the state.
+
 0.2.0   2015-03-22
     * Add the --start option for an alternative start URL.
     * Print an output on successful finish.

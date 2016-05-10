@@ -28,13 +28,16 @@ place. Can be specified more than once.
 
 An alternative start URL (instead of the base URL) to start the scan from.
 
+=item * --state-filename /path/to/filename
+
+A path to a filename that will be used to read and write the state of the
+checker, which will sometimes allow it to resume.
+
 =back
 
 =head1 LIMITATIONS
 
 =over 4
-
-=item * Does not save and restore the current state upon a failure.
 
 =item * Uses a regular expression to get rid of the anchor part (#my_id)
 
@@ -52,17 +55,21 @@ use Getopt::Long;
 use WWW::Mechanize;
 
 use List::MoreUtils qw( any none );
+use JSON::MaybeXS qw/encode_json decode_json/;
+use Path::Tiny qw/ path /;
 
 my $base_url;
 my $alternative_start_url;
 
 my @pre_skip_texts;
 my @before_insert_skips_texts;
+my $state_fn;
 GetOptions(
     'base=s' => \$base_url,
     'pre-skip=s' => \@pre_skip_texts,
     'before-insert-skip=s' => \@before_insert_skips_texts,
     'start=s' => \$alternative_start_url,
+    'state-filename=s' => \$state_fn,
 )
 or die "GetOptions failed.";
 
@@ -76,16 +83,13 @@ my @before_insert_skips_regexes = map { qr/$_/ } @before_insert_skips_texts;
 
 my $start_url = ($alternative_start_url || $base_url);
 
-my @stack;
-
-push @stack, { url => $start_url, from => undef(), },;
-
-my %encountered_urls;
-
-$encountered_urls{$start_url} = 1;
-
+my $state = +($state_fn && (-e $state_fn)) ? decode_json(path($state_fn)->slurp_utf8) :
+    {
+        stack => [{ url => $start_url, from => undef(), }],
+        encountered_urls => {$start_url => 1,},
+    };
 STACK:
-while (my $url_rec = pop(@stack))
+while (my $url_rec = $state->{stack}->[-1])
 {
     my $url = $url_rec->{'url'};
     print "Checking SRC URL '$url'\n";
@@ -97,8 +101,13 @@ while (my $url_rec = pop(@stack))
 
     if ($@)
     {
+        if ($state_fn)
+        {
+            path($state_fn)->spew_utf8(encode_json($state));
+        }
         die "SRC URL $url_rec->{from} points to '$url'.";
     }
+    pop(@{$state->{stack}});
 
     if (any { $url =~ $_} @pre_skip_regexes)
     {
@@ -109,16 +118,17 @@ while (my $url_rec = pop(@stack))
     {
         my $dest_url = $link->url_abs() . "";
         $dest_url =~ s{#[^#]+\z}{}ms;
-        if ((!exists($encountered_urls{$dest_url})) and
+        if ((!exists($state->{encountered_urls}->{$dest_url})) and
             $dest_url =~ m{\A\Q$base_url\E}ms and
             (none { $dest_url =~ $_ } @before_insert_skips_regexes)
         )
         {
-            $encountered_urls{$dest_url} = 1;
-            push @stack, { url => $dest_url, from => $url, };
+            $state->{encountered_urls}->{$dest_url} = 1;
+            push @{ $state->{stack} }, { url => $dest_url, from => $url, };
         }
     }
 }
+
 
 print "Finished checking the site under the base URL '$base_url'.\nNo broken links were found\n";
 
