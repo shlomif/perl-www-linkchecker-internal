@@ -1,5 +1,9 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.6.0   2019-08-23
+    * Convert to dzil and to
+    https://github.com/shlomif/perl-www-linkchecker-internal
+
 0.4.0   2016-05-11
     * Add the --state-filename flag for preserving the state.
 

@@ -1,6 +1,6 @@
 package WWW::LinkChecker::Internal;
 
-use 5.006;
+use 5.014;
 use strict;
 use warnings;
 
@@ -8,13 +8,7 @@ use warnings;
 
 WWW::LinkChecker::Internal - Check a web site for broken internal links.
 
-=head1 VERSION
-
-Version 0.4.0
-
 =cut
-
-our $VERSION = '0.4.0';
 
 =head1 SYNOPSIS
 
