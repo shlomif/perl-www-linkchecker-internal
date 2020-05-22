@@ -39,9 +39,9 @@ sub execute
         die "--base must be specified";
     }
 
-    my @pre_skip_regexes = map { qr/$_/ } @{ $opt->{pre_skip_texts} };
+    my @pre_skip_regexes = map { qr/$_/ } @{ $opt->{pre_skip} };
     my @before_insert_skips_regexes =
-        map { qr/$_/ } @{ $opt->{before_insert_skips_texts} };
+        map { qr/$_/ } @{ $opt->{before_insert_skip} };
 
     my $alternative_start_url = $opt->{start};
     my $state_fn              = $opt->{state_filename};

@@ -1,5 +1,8 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.8.1   2020-05-22
+    * Fix unrecognised command line options (0.8.0 regression)
+
 0.8.0   2020-05-22
     * Extract lib/WWW/LinkChecker/Internal/App.pm
         * Based on App::Cmd
