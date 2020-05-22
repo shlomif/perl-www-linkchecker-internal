@@ -6,6 +6,8 @@ use 5.014;
 
 use WWW::LinkChecker::Internal::App -command;
 
+use WWW::Mechanize ();
+
 sub description
 {
     return "check a site for broken internal links";
@@ -30,7 +32,7 @@ sub opt_spec
 sub execute
 {
     my ( $self, $opt, $args ) = @_;
-    my $base_url = $opt->{base_url};
+    my $base_url = $opt->{base};
     if ( !defined($base_url) )
     {
         die "--base must be specified";
@@ -67,7 +69,8 @@ STACK:
             {
                 path($state_fn)->spew_utf8( encode_json($state) );
             }
-            die "SRC URL $url_rec->{from} points to '$url'.";
+            my $from = ( $url_rec->{from} // "START" );
+            die "SRC URL $from points to '$url'.";
         }
         pop( @{ $state->{stack} } );
 
@@ -95,3 +98,5 @@ STACK:
 
     return;
 }
+
+1;
