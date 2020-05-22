@@ -6,6 +6,7 @@ use 5.014;
 
 use WWW::LinkChecker::Internal::App -command;
 
+use List::Util 1.34 qw/ any none /;
 use WWW::Mechanize ();
 
 sub description
