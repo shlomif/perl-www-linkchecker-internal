@@ -91,4 +91,4 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 =cut
 
-1; # End of WWW::LinkChecker::Internal
+1;    # End of WWW::LinkChecker::Internal
