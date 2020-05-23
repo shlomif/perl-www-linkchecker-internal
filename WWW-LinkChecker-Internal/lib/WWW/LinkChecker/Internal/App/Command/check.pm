@@ -54,7 +54,8 @@ sub execute
         stack            => [ { url => $start_url, from => undef(), } ],
         encountered_urls => { $start_url => 1, },
         };
-    my $stack = $state->{stack};
+    my $stack            = $state->{stack};
+    my $encountered_urls = $state->{encountered_urls};
 STACK:
 
     while ( my $url_rec = pop( @{$stack} ) )
@@ -85,11 +86,11 @@ STACK:
         {
             my $dest_url = $link->url_abs() . "";
             $dest_url =~ s{#[^#]+\z}{}ms;
-            if (    ( !exists( $state->{encountered_urls}->{$dest_url} ) )
+            if (    ( !exists( $encountered_urls->{$dest_url} ) )
                 and $dest_url =~ m{\A\Q$base_url\E}ms
                 and ( none { $dest_url =~ $_ } @before_insert_skips_regexes ) )
             {
-                $state->{encountered_urls}->{$dest_url} = 1;
+                $encountered_urls->{$dest_url} = 1;
                 push @{$stack}, { url => $dest_url, from => $url, };
             }
         }
