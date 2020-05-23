@@ -54,9 +54,10 @@ sub execute
         stack            => [ { url => $start_url, from => undef(), } ],
         encountered_urls => { $start_url => 1, },
         };
+    my $stack = $state->{stack};
 STACK:
 
-    while ( my $url_rec = pop( @{ $state->{stack} } ) )
+    while ( my $url_rec = pop( @{$stack} ) )
     {
         my $url = $url_rec->{'url'};
         print "Checking SRC URL '$url'\n";
@@ -66,7 +67,7 @@ STACK:
 
         if ($@)
         {
-            push @{ $state->{stack} }, $url_rec;
+            push @{$stack}, $url_rec;
             if ($state_fn)
             {
                 path($state_fn)->spew_utf8( encode_json($state) );
@@ -89,7 +90,7 @@ STACK:
                 and ( none { $dest_url =~ $_ } @before_insert_skips_regexes ) )
             {
                 $state->{encountered_urls}->{$dest_url} = 1;
-                push @{ $state->{stack} }, { url => $dest_url, from => $url, };
+                push @{$stack}, { url => $dest_url, from => $url, };
             }
         }
     }
