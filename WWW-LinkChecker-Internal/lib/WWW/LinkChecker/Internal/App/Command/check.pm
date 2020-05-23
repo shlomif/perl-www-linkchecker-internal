@@ -56,7 +56,7 @@ sub execute
         };
 STACK:
 
-    while ( my $url_rec = $state->{stack}->[-1] )
+    while ( my $url_rec = pop( @{ $state->{stack} } ) )
     {
         my $url = $url_rec->{'url'};
         print "Checking SRC URL '$url'\n";
@@ -66,6 +66,7 @@ STACK:
 
         if ($@)
         {
+            push @{ $state->{stack} }, $url_rec;
             if ($state_fn)
             {
                 path($state_fn)->spew_utf8( encode_json($state) );
@@ -73,7 +74,6 @@ STACK:
             my $from = ( $url_rec->{from} // "START" );
             die "SRC URL $from points to '$url'.";
         }
-        pop( @{ $state->{stack} } );
 
         if ( any { $url =~ $_ } @pre_skip_regexes )
         {
