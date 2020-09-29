@@ -19,7 +19,7 @@ else
 # some other stuff.
 my $finder = Test::TrailingSpace->new(
     {
-        root => '.',
+        root           => '.',
         filename_regex =>
 qr/(?:\.(?:t|pm|pl|xs|c|h|txt|pod|PL)|README|Changes|TODO|LICENSE)\z/,
     },
