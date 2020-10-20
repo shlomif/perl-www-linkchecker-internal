@@ -8,8 +8,6 @@ use warnings;
 
 WWW::LinkChecker::Internal - Check a web site for broken internal links.
 
-=cut
-
 =head1 SYNOPSIS
 
 See the link-checker.pl script in this distribution.
@@ -18,53 +16,13 @@ See the link-checker.pl script in this distribution.
 
 Shlomi Fish, L<http://www.shlomifish.org> .
 
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-www-linkchecker-internal at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=WWW-LinkChecker-Internal>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc WWW::LinkChecker::Internal
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-LinkChecker-Internal>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/WWW-LinkChecker-Internal>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/WWW-LinkChecker-Internal>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/WWW-LinkChecker-Internal/>
-
-=back
-
-
 =head1 ACKNOWLEDGEMENTS
-
 
 =head1 LICENSE AND COPYRIGHT
 
 Copyright 2012 Shlomi Fish.
 
-This program is distributed under the MIT (X11) License:
+This program is distributed under the MIT (Expat) License:
 L<http://www.opensource.org/licenses/mit-license.php>
 
 Permission is hereby granted, free of charge, to any person

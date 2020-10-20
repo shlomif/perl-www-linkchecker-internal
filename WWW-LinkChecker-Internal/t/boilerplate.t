@@ -47,13 +47,16 @@ sub module_boilerplate_ok
 
 TODO:
 {
+    # TEST
     not_in_file_ok(
         README => "The README is used..." => qr/The README is used/,
         "'version information here'" => qr/to provide version information/,
     );
 
+    # TEST
     not_in_file_ok( Changes => "placeholder date/time" => qr(Date/time) );
 
+    # TEST
     module_boilerplate_ok('lib/WWW/LinkChecker/Internal.pm');
 
 }
