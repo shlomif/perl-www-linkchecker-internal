@@ -6,9 +6,6 @@ use 5.014;
 
 use WWW::LinkChecker::Internal::App -command;
 
-use List::Util 1.34 qw/ any none /;
-use WWW::Mechanize ();
-
 use WWW::LinkChecker::Internal::API::Worker ();
 
 sub description
@@ -38,6 +35,7 @@ sub execute
 
     return WWW::LinkChecker::Internal::API::Worker->new(
         {
+            base_url => ( $opt->{base} // ( die "--base must be specified" ) ),
             before_insert_skip =>
                 [ map { qr/$_/ } @{ $opt->{before_insert_skip} } ],
             pre_skip => [ map { qr/$_/ } @{ $opt->{pre_skip} } ],
