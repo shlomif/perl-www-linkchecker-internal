@@ -42,7 +42,7 @@ sub execute
             start_url      => $opt->{start},
             state_filename => $opt->{state_filename},
         }
-    )->run($opt);
+    )->run();
 }
 
 1;

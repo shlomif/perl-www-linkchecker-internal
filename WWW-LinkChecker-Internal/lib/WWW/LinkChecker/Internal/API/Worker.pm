@@ -17,7 +17,7 @@ has 'state_filename'     => ( is => 'ro', );
 
 sub run
 {
-    my ( $self, $opt, ) = @_;
+    my ($self) = @_;
 
     my $base_url = $self->base_url;
     if ( !defined($base_url) )
