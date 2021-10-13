@@ -1,5 +1,9 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.10.0  2021-10-13
+    - Extracted WWW::LinkChecker::Internal::API::Worker
+    - Fix missing imports used by --state-fn.
+
 0.8.2   2020-10-20
     - dist.ini / weaver.ini / .tidyallrc / etc. cleanup
         - Move to @SHLOMIF

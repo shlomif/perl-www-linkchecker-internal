@@ -101,6 +101,8 @@ WWW::LinkChecker::Internal::API::Worker - API object
 
 =head1 DESCRIPTION
 
+(This module was added in version 0.10.0 .)
+
 =head1 METHODS
 
 =head2 base_url()
