@@ -29,6 +29,13 @@ sub opt_spec
     );
 }
 
+sub _regexify
+{
+    my ( $self, $arr ) = @_;
+
+    return [ map { qr/$_/ } @{$arr} ];
+}
+
 sub execute
 {
     my ( $self, $opt, $args ) = @_;
@@ -37,8 +44,8 @@ sub execute
         {
             base_url           => $base_url,
             before_insert_skip =>
-                [ map { qr/$_/ } @{ $opt->{before_insert_skip} } ],
-            pre_skip       => [ map { qr/$_/ } @{ $opt->{pre_skip} } ],
+                $self->_regexify( $opt->{before_insert_skip} ),
+            pre_skip       => $self->_regexify( $opt->{pre_skip} ),
             start_url      => $opt->{start},
             state_filename => $opt->{state_filename},
         }
