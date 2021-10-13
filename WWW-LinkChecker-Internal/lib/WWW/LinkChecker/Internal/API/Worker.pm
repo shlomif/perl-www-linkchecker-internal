@@ -12,6 +12,7 @@ use WWW::Mechanize ();
 has 'base_url'           => ( is => 'ro', required => 1 );
 has 'before_insert_skip' => ( is => 'ro', required => 1 );
 has 'pre_skip'           => ( is => 'ro', required => 1 );
+has 'start_url'          => ( is => 'ro', );
 
 sub run
 {
@@ -25,7 +26,7 @@ sub run
     my @before_insert_skips_regexes = @{ $self->before_insert_skip() };
 
     my @pre_skip_regexes      = @{ $self->pre_skip() };
-    my $alternative_start_url = $opt->{start};
+    my $alternative_start_url = $self->start_url();
     my $state_fn              = $opt->{state_filename};
     my $start_url             = ( $alternative_start_url || $base_url );
 
@@ -114,6 +115,10 @@ Pre-skip regexes.
 =head2 run()
 
 Runs the check.
+
+=head2 start_url()
+
+Alternative start URL; defaults to base_url().
 
 =cut
 
