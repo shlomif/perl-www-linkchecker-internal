@@ -10,6 +10,7 @@ use List::Util 1.34 qw/ any none /;
 use WWW::Mechanize ();
 
 has 'before_insert_skip' => ( is => 'ro', required => 1 );
+has 'pre_skip'           => ( is => 'ro', required => 1 );
 
 sub run
 {
@@ -20,10 +21,9 @@ sub run
     {
         die "--base must be specified";
     }
-
-    my @pre_skip_regexes            = map { qr/$_/ } @{ $opt->{pre_skip} };
     my @before_insert_skips_regexes = @{ $self->before_insert_skip() };
 
+    my @pre_skip_regexes      = @{ $self->pre_skip() };
     my $alternative_start_url = $opt->{start};
     my $state_fn              = $opt->{state_filename};
     my $start_url             = ( $alternative_start_url || $base_url );
@@ -101,6 +101,10 @@ WWW::LinkChecker::Internal::API::Worker - API object
 =head2 before_insert_skip()
 
 Before-insert-skip regexes.
+
+=head2 pre_skip()
+
+Pre-skip regexes.
 
 =head2 run()
 
