@@ -32,10 +32,10 @@ sub opt_spec
 sub execute
 {
     my ( $self, $opt, $args ) = @_;
-
-    return WWW::LinkChecker::Internal::API::Worker->new(
+    my $base_url = ( $opt->{base} // ( die "--base must be specified" ) );
+    my $ret      = WWW::LinkChecker::Internal::API::Worker->new(
         {
-            base_url => ( $opt->{base} // ( die "--base must be specified" ) ),
+            base_url           => $base_url,
             before_insert_skip =>
                 [ map { qr/$_/ } @{ $opt->{before_insert_skip} } ],
             pre_skip       => [ map { qr/$_/ } @{ $opt->{pre_skip} } ],
@@ -43,6 +43,14 @@ sub execute
             state_filename => $opt->{state_filename},
         }
     )->run();
+
+    if ( $ret->{success} )
+    {
+        print
+"Finished checking the site under the base URL '$base_url'.\nNo broken links were found\n";
+
+    }
+    return;
 }
 
 1;
