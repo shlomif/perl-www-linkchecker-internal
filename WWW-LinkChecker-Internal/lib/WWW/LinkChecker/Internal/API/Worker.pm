@@ -6,7 +6,11 @@ use 5.014;
 
 use Moo;
 
+use JSON::MaybeXS qw( decode_json encode_json );
 use List::Util 1.34 qw/ any none /;
+
+use Path::Tiny qw/ path /;
+
 use WWW::Mechanize ();
 
 has 'base_url'           => ( is => 'ro', required => 1 );
