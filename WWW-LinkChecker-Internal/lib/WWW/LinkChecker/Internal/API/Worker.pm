@@ -84,10 +84,7 @@ STACK:
         }
     }
 
-    print
-"Finished checking the site under the base URL '$base_url'.\nNo broken links were found\n";
-
-    return;
+    return +{ success => 1, };
 
 }
 
