@@ -21,8 +21,10 @@ has 'state_filename'     => ( is => 'ro', );
 
 sub run
 {
-    my ($self) = @_;
+    my ( $self, $args ) = @_;
 
+    my $check_url_inform_cb =
+        ( $args->{check_url_inform_cb} // sub { return; } );
     my $base_url = $self->base_url;
     if ( !defined($base_url) )
     {
@@ -49,7 +51,7 @@ STACK:
     while ( my $url_rec = pop( @{$stack} ) )
     {
         my $url = $url_rec->{'url'};
-        print "Checking SRC URL '$url'\n";
+        $check_url_inform_cb->( { url => $url, } );
 
         my $mech = WWW::Mechanize->new();
         eval { $mech->get($url); };
@@ -85,7 +87,6 @@ STACK:
     }
 
     return +{ success => 1, };
-
 }
 
 1;
