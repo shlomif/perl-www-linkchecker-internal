@@ -42,7 +42,17 @@ sub execute
             start_url      => $opt->{start},
             state_filename => $opt->{state_filename},
         }
-    )->run();
+    )->run(
+        {
+            check_url_inform_cb => sub {
+                my ($args) = @_;
+                my $url = $args->{url};
+                print "Checking SRC URL '$url'\n";
+                return;
+            },
+
+        }
+    );
 
     if ( $ret->{success} )
     {
