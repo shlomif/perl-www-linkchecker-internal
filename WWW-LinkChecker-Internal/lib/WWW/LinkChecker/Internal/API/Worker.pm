@@ -9,6 +9,7 @@ use Moo;
 use List::Util 1.34 qw/ any none /;
 use WWW::Mechanize ();
 
+has 'base_url'           => ( is => 'ro', required => 1 );
 has 'before_insert_skip' => ( is => 'ro', required => 1 );
 has 'pre_skip'           => ( is => 'ro', required => 1 );
 
@@ -16,7 +17,7 @@ sub run
 {
     my ( $self, $opt, ) = @_;
 
-    my $base_url = $opt->{base};
+    my $base_url = $self->base_url;
     if ( !defined($base_url) )
     {
         die "--base must be specified";
@@ -97,6 +98,10 @@ WWW::LinkChecker::Internal::API::Worker - API object
 =head1 DESCRIPTION
 
 =head1 METHODS
+
+=head2 base_url()
+
+The site's base URL.
 
 =head2 before_insert_skip()
 
