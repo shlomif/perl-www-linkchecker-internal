@@ -38,8 +38,9 @@ sub execute
             base_url => ( $opt->{base} // ( die "--base must be specified" ) ),
             before_insert_skip =>
                 [ map { qr/$_/ } @{ $opt->{before_insert_skip} } ],
-            pre_skip  => [ map { qr/$_/ } @{ $opt->{pre_skip} } ],
-            start_url => $opt->{start},
+            pre_skip       => [ map { qr/$_/ } @{ $opt->{pre_skip} } ],
+            start_url      => $opt->{start},
+            state_filename => $opt->{state_filename},
         }
     )->run($opt);
 }
