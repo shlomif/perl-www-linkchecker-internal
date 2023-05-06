@@ -6,7 +6,7 @@ use 5.014;
 
 use Moo;
 
-use JSON::MaybeXS qw( decode_json encode_json );
+use JSON::MaybeXS   qw( decode_json encode_json );
 use List::Util 1.34 qw/ any none /;
 
 use Path::Tiny qw/ path /;
@@ -46,11 +46,15 @@ sub run
         };
     my $stack            = $state->{stack};
     my $encountered_urls = $state->{encountered_urls};
+    my $prev;
+    my $dest_url;
+    my $url;
 STACK:
 
     while ( my $url_rec = pop( @{$stack} ) )
     {
-        my $url = $url_rec->{'url'};
+        $dest_url = undef;
+        $url      = $url_rec->{'url'};
         $check_url_inform_cb->( { url => $url, } );
 
         my $mech = WWW::Mechanize->new();
@@ -71,19 +75,43 @@ STACK:
         {
             next STACK;
         }
-
         foreach my $link ( $mech->links() )
         {
-            my $dest_url = $link->url_abs() . "";
-            $dest_url =~ s{#[^#]+\z}{}ms;
-            if (    ( !exists( $encountered_urls->{$dest_url} ) )
-                and $dest_url =~ m{\A\Q$base_url\E}ms
-                and ( none { $dest_url =~ $_ } @before_insert_skips_regexes ) )
+            if ( $link->tag() eq 'link' )
             {
-                $encountered_urls->{$dest_url} = 1;
-                push @{$stack}, { url => $dest_url, from => $url, };
+                my $rel = $link->attrs()->{'rel'};
+                if ( $rel eq 'prev' )
+                {
+                    if ( ( defined $prev ) and $link->url_abs ne $prev )
+                    {
+                        die "prev";
+                    }
+                }
+                elsif ( $rel eq 'next' )
+                {
+                    $dest_url = $link->url_abs() . "";
+                    $dest_url =~ s{#[^#]+\z}{}ms;
+                    if (
+                            ( !exists( $encountered_urls->{$dest_url} ) )
+                        and $dest_url =~ m{\A\Q$base_url\E}ms
+                        and ( none { $dest_url =~ $_ }
+                            @before_insert_skips_regexes )
+                        )
+                    {
+                        $encountered_urls->{$dest_url} = 1;
+                        push @{$stack}, { url => $dest_url, from => $url, };
+                    }
+                }
             }
         }
+    }
+    continue
+    {
+        if ( !defined($dest_url) )
+        {
+            die "no next at SRC = $url";
+        }
+        $prev = $url;
     }
 
     return +{ success => 1, };
