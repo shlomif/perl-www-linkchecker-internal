@@ -82,9 +82,16 @@ STACK:
                 my $rel = $link->attrs()->{'rel'};
                 if ( $rel eq 'prev' )
                 {
-                    if ( ( defined $prev ) and $link->url_abs ne $prev )
+                    if ( defined $prev )
                     {
-                        die "prev";
+                        if ( $link->url_abs ne $prev )
+                        {
+                            die "prev";
+                        }
+                        else
+                        {
+                            say "prev = $prev ;";
+                        }
                     }
                 }
                 elsif ( $rel eq 'next' )
