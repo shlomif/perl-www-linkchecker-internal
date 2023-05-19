@@ -13,11 +13,12 @@ use Path::Tiny qw/ path /;
 
 use WWW::Mechanize ();
 
-has 'base_url'           => ( is => 'ro', required => 1 );
-has 'before_insert_skip' => ( is => 'ro', required => 1 );
-has 'pre_skip'           => ( is => 'ro', required => 1 );
-has 'start_url'          => ( is => 'ro', );
-has 'state_filename'     => ( is => 'ro', );
+has 'base_url'             => ( is => 'ro', required => 1 );
+has 'before_insert_skip'   => ( is => 'ro', required => 1 );
+has 'pre_skip'             => ( is => 'ro', required => 1 );
+has 'only_check_site_flow' => ( is => 'ro', );
+has 'start_url'            => ( is => 'ro', );
+has 'state_filename'       => ( is => 'ro', );
 
 sub run
 {
@@ -34,6 +35,7 @@ sub run
 
     my @pre_skip_regexes      = @{ $self->pre_skip() };
     my $alternative_start_url = $self->start_url();
+    my $only_check_site_flow  = $self->only_check_site_flow();
     my $state_fn              = $self->state_filename();
     my $start_url             = ( $alternative_start_url || $base_url );
 
@@ -46,11 +48,15 @@ sub run
         };
     my $stack            = $state->{stack};
     my $encountered_urls = $state->{encountered_urls};
+    my $prev;
+    my $dest_url;
+    my $url;
 STACK:
 
     while ( my $url_rec = pop( @{$stack} ) )
     {
-        my $url = $url_rec->{'url'};
+        $dest_url = undef;
+        $url      = $url_rec->{'url'};
         $check_url_inform_cb->( { url => $url, } );
 
         my $mech = WWW::Mechanize->new();
@@ -71,10 +77,9 @@ STACK:
         {
             next STACK;
         }
-
-        foreach my $link ( $mech->links() )
-        {
-            my $dest_url = $link->url_abs() . "";
+        my $process = sub {
+            my ($link) = @_;
+            $dest_url = $link->url_abs() . "";
             $dest_url =~ s{#[^#]+\z}{}ms;
             if (    ( !exists( $encountered_urls->{$dest_url} ) )
                 and $dest_url =~ m{\A\Q$base_url\E}ms
@@ -83,6 +88,49 @@ STACK:
                 $encountered_urls->{$dest_url} = 1;
                 push @{$stack}, { url => $dest_url, from => $url, };
             }
+        };
+        foreach my $link ( $mech->links() )
+        {
+            if ($only_check_site_flow)
+            {
+                if ( $link->tag() eq 'link' )
+                {
+                    my $rel = $link->attrs()->{'rel'};
+                    if ( $rel eq 'prev' )
+                    {
+                        if ( defined $prev )
+                        {
+                            if ( $link->url_abs ne $prev )
+                            {
+                                die "prev";
+                            }
+                            else
+                            {
+                                say "prev = $prev ;";
+                            }
+                        }
+                    }
+                    elsif ( $rel eq 'next' )
+                    {
+                        $process->($link);
+                    }
+                }
+            }
+            else
+            {
+                $process->($link);
+            }
+        }
+    }
+    continue
+    {
+        if ($only_check_site_flow)
+        {
+            if ( !defined($dest_url) )
+            {
+                die "no next at SRC = $url";
+            }
+            $prev = $url;
         }
     }
 
@@ -112,6 +160,10 @@ The site's base URL.
 =head2 before_insert_skip()
 
 Before-insert-skip regexes.
+
+=head2 only_check_site_flow()
+
+Only check site-flow links.
 
 =head2 pre_skip()
 
