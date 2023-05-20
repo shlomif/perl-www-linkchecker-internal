@@ -24,6 +24,7 @@ sub opt_spec
         [ "base=s",                "Base URL", ],
         [ 'before-insert-skip=s@', "before-insert-skip regexes", ],
         [ 'pre-skip=s@',           "pre-skip regexes", ],
+        [ 'only-check-site-flow!', 'only-check-site-flow!', ],
         [ 'start=s',               "alternative start URL", ],
         [ 'state-filename=s' => 'filename to keep the state', ],
     );
@@ -45,9 +46,10 @@ sub execute
             base_url           => $base_url,
             before_insert_skip =>
                 $self->_regexify( $opt->{before_insert_skip} ),
-            pre_skip       => $self->_regexify( $opt->{pre_skip} ),
-            start_url      => $opt->{start},
-            state_filename => $opt->{state_filename},
+            only_check_site_flow => $opt->{only_check_site_flow},
+            pre_skip             => $self->_regexify( $opt->{pre_skip} ),
+            start_url            => $opt->{start},
+            state_filename       => $opt->{state_filename},
         }
     )->run(
         {
