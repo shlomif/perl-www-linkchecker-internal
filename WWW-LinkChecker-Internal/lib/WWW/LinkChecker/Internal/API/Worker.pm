@@ -43,8 +43,8 @@ sub run
         +( $state_fn && ( -e $state_fn ) )
         ? decode_json( path($state_fn)->slurp_utf8 )
         : {
-        stack            => [ { url => $start_url, from => undef(), } ],
-        encountered_urls => { $start_url => 1, },
+        stack            => [ $start_url, ],
+        encountered_urls => { $start_url => undef(), },
         };
     my $stack            = $state->{stack};
     my $encountered_urls = $state->{encountered_urls};
@@ -56,7 +56,7 @@ STACK:
     while ( my $url_rec = pop( @{$stack} ) )
     {
         $dest_url = undef;
-        $url      = $url_rec->{'url'};
+        $url      = $url_rec;
         $check_url_inform_cb->( { url => $url, } );
 
         my $mech = WWW::Mechanize->new();
@@ -69,7 +69,7 @@ STACK:
             {
                 path($state_fn)->spew_utf8( encode_json($state) );
             }
-            my $from = ( $url_rec->{from} // "START" );
+            my $from = ( $encountered_urls->{$dest_url} // "START" );
             die "SRC URL $from points to '$url'.";
         }
 
@@ -85,8 +85,8 @@ STACK:
                 and $dest_url =~ m{\A\Q$base_url\E}ms
                 and ( none { $dest_url =~ $_ } @before_insert_skips_regexes ) )
             {
-                $encountered_urls->{$dest_url} = 1;
-                push @{$stack}, { url => $dest_url, from => $url, };
+                $encountered_urls->{$dest_url} = $url;
+                push @{$stack}, $dest_url;
             }
         };
         foreach my $link ( $mech->links() )
