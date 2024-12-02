@@ -6,6 +6,8 @@ use 5.014;
 
 use Moo;
 
+use Heap::Elem::Str qw( StrElem );
+use Heap::Fibonacci ();
 use JSON::MaybeXS   qw( decode_json encode_json );
 use List::Util 1.34 qw/ any none /;
 
@@ -43,20 +45,24 @@ sub run
         +( $state_fn && ( -e $state_fn ) )
         ? decode_json( path($state_fn)->slurp_utf8 )
         : {
-        stack            => [ $start_url, ],
+        stack            => scalar( Heap::Fibonacci->new() ),
         encountered_urls => { $start_url => undef(), },
         };
-    my $stack            = $state->{stack};
+    my $stack = $state->{stack};
+    {
+        my $el = StrElem($start_url);
+        $stack->add($el);
+    }
     my $encountered_urls = $state->{encountered_urls};
     my $prev;
     my $dest_url;
     my $url;
 STACK:
 
-    while ( my $url_rec = pop( @{$stack} ) )
+    while ( defined( my $url_rec = $stack->extract_top() ) )
     {
         $dest_url = undef;
-        $url      = $url_rec;
+        $url      = $url_rec->val();
         $check_url_inform_cb->( { url => $url, } );
 
         my $mech = WWW::Mechanize->new();
@@ -64,7 +70,7 @@ STACK:
 
         if ($@)
         {
-            push @{$stack}, $url_rec;
+            $stack->add($url_rec);
             if ($state_fn)
             {
                 path($state_fn)->spew_utf8( encode_json($state) );
@@ -86,7 +92,8 @@ STACK:
                 and ( none { $dest_url =~ $_ } @before_insert_skips_regexes ) )
             {
                 $encountered_urls->{$dest_url} = $url;
-                push @{$stack}, $dest_url;
+                my $el = StrElem($dest_url);
+                $stack->add($el);
             }
         };
         foreach my $link ( $mech->links() )
