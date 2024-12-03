@@ -1,5 +1,9 @@
 Revision history for WWW-LinkChecker-Internal
 
+0.14.0  2024-12-03
+    - use Heap::Fibonacci instead of an array for a more consistent
+    order of traversal.
+
 0.12.0  2023-05-20
     - only_check_site_flow
 
