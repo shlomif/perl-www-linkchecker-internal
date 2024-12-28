@@ -10,19 +10,6 @@ use WWW::LinkChecker::Internal::API::Worker ();
 
 use Term::ANSIColor qw( colored );
 
-sub _my_colored
-{
-    my ( $text, $color ) = @_;
-    if ( $ENV{NO_COLORS} )
-    {
-        return $text;
-    }
-    else
-    {
-        return colored( $text, $color );
-    }
-}
-
 sub description
 {
     return "check a site for broken internal links";
@@ -81,7 +68,7 @@ sub execute
     if ( $ret->{success} )
     {
         print "Finished checking the site under the base URL '$base_url'.\n";
-        say _my_colored( "No broken links were found", "green on_black" );
+        say colored( "No broken links were found", "green on_black" );
 
     }
     return;
