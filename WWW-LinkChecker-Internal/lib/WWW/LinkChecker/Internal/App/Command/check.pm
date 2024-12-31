@@ -43,32 +43,42 @@ sub execute
 {
     my ( $self, $opt, $args ) = @_;
     my $base_url = ( $opt->{base} // ( die "--base must be specified" ) );
-    my $ret      = WWW::LinkChecker::Internal::API::Worker->new(
-        {
-            base_url           => $base_url,
-            before_insert_skip =>
-                $self->_regexify( $opt->{before_insert_skip} ),
-            only_check_site_flow => $opt->{only_check_site_flow},
-            pre_skip             => $self->_regexify( $opt->{pre_skip} ),
-            start_url            => $opt->{start},
-            state_filename       => $opt->{state_filename},
-        }
-    )->run(
-        {
-            check_url_inform_cb => sub {
-                my ($args) = @_;
-                my $url = $args->{url};
-                print "Checking SRC URL '$url'\n";
-                return;
-            },
+    my $ret;
+    eval {
 
-        }
-    );
+        $ret = WWW::LinkChecker::Internal::API::Worker->new(
+            {
+                base_url           => $base_url,
+                before_insert_skip =>
+                    $self->_regexify( $opt->{before_insert_skip} ),
+                only_check_site_flow => $opt->{only_check_site_flow},
+                pre_skip             => $self->_regexify( $opt->{pre_skip} ),
+                start_url            => $opt->{start},
+                state_filename       => $opt->{state_filename},
+            }
+        )->run(
+            {
+                check_url_inform_cb => sub {
+                    my ($args) = @_;
+                    my $url = $args->{url};
+                    print "Checking SRC URL '$url'\n";
+                    return;
+                },
 
+            }
+        );
+    };
+
+    my $err = $@;
+    if ($err)
+    {
+        say colored( "failure", "bright_red on_black" );
+        die $err;
+    }
     if ( $ret->{success} )
     {
         print "Finished checking the site under the base URL '$base_url'.\n";
-        say colored( "No broken links were found", "green on_black" );
+        say colored( "No broken links were found", "bright_green on_black" );
 
     }
     return;
